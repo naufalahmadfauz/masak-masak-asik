@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Masak Masak</title>
+</head>
+<body>
+<h1> Selamat Datang Di Aplikasi masak masak</h1>
+<p> Nama : {{user.name}}</p>
+<p> Email : {{user.email}}</p>
+
+<a href="/recipes" style="text-decoration: none"> Resep Saya </a>
+<a href="/users/me/edit"> Edit Profil Saya</a>
+<form method="post" action="/users/logout">
+    <button type="submit"> logout</button>
+</form>
+</body>
+<!--<script src="/js/login.js"></script>-->
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Masak Masak</title>
+</head>
+<body>
+<h1> Selamat Datang Di Aplikasi masak masak</h1>
+{{#if recipes}}
+    {{#recipes}}
+        <p> {{title}} </p>
+    {{/recipes}}
+    {{else}}
+    <p>No Recipes!</p>
+{{/if}}
+
+<br>
+<br>
+<a href="/users/me" style="text-decoration: none"> Profil Saya </a>
+</body>
+<!--<script src="/js/login.js"></script>-->
+</html>

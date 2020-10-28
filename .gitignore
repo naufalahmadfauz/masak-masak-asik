@@ -1,0 +1,6 @@
+masak_masak_db/
+.idea/
+node_modules/
+config/
+public/
+tests/

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Masak Masak</title>
+</head>
+<body>
+<h1> Edit Profile</h1>
+<p> Nama : {{user.name}}</p>
+<p> Email : {{user.email}}</p>
+<form method="POST" action="/users/me">
+    <input type="hidden" name="_method" value="patch">
+    <input name="name" placeholder="Nama" value="{{user.name}}">
+    <input name="email" placeholder="Email" value="{{user.email}}">
+    <input name="password" placeholder="Password" type="password">
+    <button type="submit">Edit</button>
+</form>
+
+
+<a href="/recipes" style="text-decoration: none"> Resep Saya </a>
+<a href="/"> Edit Profil Saya</a>
+<form method="post" action="/users/logout">
+    <button type="submit"> logout</button>
+</form>
+</body>
+<!--<script src="/js/login.js"></script>-->
+</html>
