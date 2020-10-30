@@ -23,13 +23,23 @@ router.get('/',async (req, res) =>{
     res.send('main Page')
 })
 
-router.post('/users', async (req, res) => {
+router.get('/users/signup',async (req,res)=>{
+    res.render('signup')
+})
+router.post('/users/signup', async (req, res) => {
     try {
+        if (req.body.phoneNumber===''){
+            delete req.body.phoneNumber
+        }
         const user = new User(req.body)
         // sendWelcomeEmail(user.email,user.name)
         const token = await user.generateAuthToken()
         await user.save()
-        res.status(201).send({user, token})
+        req.session.token = token
+        req.session.save(()=>{
+            res.redirect('/users/me')
+        })
+        // res.status(201).send({user, token})
     } catch (e) {
         res.status(500).send(e)
     }
@@ -38,7 +48,7 @@ router.post('/users', async (req, res) => {
 router.get('/users/login', async (req, res) => {
     if (req.session.token) {
         res.redirect('/users/me')
-    } else res.render('login', {message: req.flash('message')})
+    } else res.render('login', {message: req.flash('message'),logout:req.flash('logout')})
 })
 
 router.post('/users/login', async (req, res) => {
@@ -47,8 +57,9 @@ router.post('/users/login', async (req, res) => {
 
         const token = await user.generateAuthToken()
         req.session.token = token
-        req.session.save()
-        res.redirect('/users/me')
+        req.session.save(()=>{
+            res.redirect('/users/me')
+        })
         // res.send({user, token})
 
     } catch (e) {
@@ -63,9 +74,11 @@ router.post('/users/me/avatar', auth, upload.single('avatar'), async (req, res) 
     const buffer = await sharp(req.file.buffer).resize({width: 250, height: 250}).png().toBuffer()
     req.user.avatar = buffer
     await req.user.save()
-    res.send()
+    res.redirect('/users/me/edit')
+    // res.send()
 }, (error, req, res, next) => {
-    res.status(400).send({error: error.message})
+    res.status(400).redirect('/users/me/edit')
+    // res.status(400).send({error: error.message})
 })
 
 router.get('/users/:id/avatar', async (req, res) => {
@@ -75,7 +88,6 @@ router.get('/users/:id/avatar', async (req, res) => {
             throw new Error()
         }
         res.set('Content-Type', 'image/png')
-
         res.send(user.avatar)
     } catch (e) {
         res.status(404).send()
@@ -94,11 +106,11 @@ router.get('/users/me', auth, async (req, res) => {
 })
 
 router.get('/users/me/edit', auth, async (req, res) => {
+    console.log(req.user.phoneNumber)
     res.render('edit_profile', {user: req.user})
 })
 
 router.patch('/users/me', auth, async (req, res) => {
-
     let updates = Object.keys(req.body)
 
     if (req.body.password === '') {
@@ -106,18 +118,18 @@ router.patch('/users/me', auth, async (req, res) => {
             return update !== 'password'
         })
     }
-
     const allowedUpdates = ['phoneNumber', 'name', 'email', 'password']
 
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
     if (!isValidOperation) {
         return res.status(405).send({error: 'Not a valid operation!'})
     }
-    try {
 
+    try {
         updates.forEach((update) => req.user[update] = req.body[update])
         await req.user.save()
-        res.send(req.user)
+        res.redirect('/users/me')
+        // res.send(req.user)
     } catch (e) {
         res.status(500).send(e)
     }
@@ -127,9 +139,11 @@ router.post('/users/logout', auth, async (req, res) => {
     try {
         req.user.tokens = req.user.tokens.filter((token) => token.token !== req.token)
         await req.user.save()
-        req.session.destroy()
-
-        res.send(req.user)
+        req.flash('logout','Logout Success!')
+        req.session.destroy(()=>{
+            res.redirect('/users/login')
+        })
+        // res.send(req.user)
     } catch (e) {
         res.status(500).send(e)
     }
@@ -139,9 +153,9 @@ router.post('/users/logoutAll', auth, async (req, res) => {
     try {
         req.user.tokens = []
         await req.user.save()
-        req.session.destroy()
-
-        res.send(req.user)
+        req.session.destroy(()=>{
+            res.redirect('/users/login')
+        })
     } catch (e) {
         res.status(500).send(e)
     }
@@ -150,9 +164,10 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
-        req.session.destroy()
+        req.session.destroy(()=>{
+            res.redirect('/users/login')
+        })
         // sendCancelationEmail(user.email,user.name)
-        res.send()
     } catch (e) {
         res.status(500).send(e)
     }

@@ -4,17 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>SignUp</title>
 </head>
 <body>
-<form id="form-login" method="post" action="/users/login">
+<form id="form-signup" method="post" action="/users/signup">
+    <input type="text" id="email-login" name="name">name
     <input type="email" id="email-login" name="email">email
     <input type="password" id="password-login" name="password">password
+    <input type="number" id="phone-number" name="phoneNumber">Phone Number
     <button id="login-button" type="submit"> send </button>
 </form>
-<p> Tidak punya akun? <a href="/users/signup"> Daftar </a></p>
-{{logout}}
-{{message}}
 </body>
 <!--<script src="/js/login.js"></script>-->
 </html>

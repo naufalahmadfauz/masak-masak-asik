@@ -9,14 +9,22 @@
 <p> Nama : {{user.name}}</p>
 <p> Email : {{user.email}}</p>
 <form method="POST" action="/users/me">
-    <input type="hidden" name="_method" value="patch">
-    <input name="name" placeholder="Nama" value="{{user.name}}">
-    <input name="email" placeholder="Email" value="{{user.email}}">
-    <input name="password" placeholder="Password" type="password">
-    <button type="submit">Edit</button>
+    <p><input type="hidden" name="_method" value="patch"></p>
+
+    <p> <input name="name" placeholder="Nama" value="{{user.name}}"></p>
+
+    <p><input name="email" placeholder="Email" value="{{user.email}}"></p>
+
+    <p><input type="number" name="phoneNumber" placeholder="Phone Number" value="{{user.phoneNumber}}"></p>
+    <p><input name="password" placeholder="Password" type="password"></p>
+    <p><button type="submit">Edit</button></p>
 </form>
 
-
+<form method="post" id="upload-image" action="/users/me/avatar" enctype="multipart/form-data">
+    <input type="file" name="avatar">
+    <button id="upload-button" type="submit">Upload</button>
+</form>
+<img src="/users/{{user._id}}/avatar">
 <a href="/recipes" style="text-decoration: none"> Resep Saya </a>
 <a href="/"> Edit Profil Saya</a>
 <form method="post" action="/users/logout">

@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        minlength: 7,
+        min: 7,
         validate(value) {
             if (value.toLowerCase().includes('password')) {
                 throw new Error('Password should not contain "Password"')
@@ -34,13 +34,8 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: Number,
-        default: 0,
-        trim: true,
-        validate(value) {
-            if (value.length < 10) {
-                throw new Error('Phone number must greater than 10')
-            }
-        }
+        default: 1,
+        minlength:10,
     },
     tokens: [{
         token: {

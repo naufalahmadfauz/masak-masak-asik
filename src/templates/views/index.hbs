@@ -8,11 +8,21 @@
 <h1> Selamat Datang Di Aplikasi masak masak</h1>
 <p> Nama : {{user.name}}</p>
 <p> Email : {{user.email}}</p>
+<p> Nomer Handphone : {{user.phoneNumber}}</p>
 
 <a href="/recipes" style="text-decoration: none"> Resep Saya </a>
 <a href="/users/me/edit"> Edit Profil Saya</a>
 <form method="post" action="/users/logout">
     <button type="submit"> logout</button>
+</form>
+
+<form method="post" action="/users/logoutAll">
+    <button type="submit"> logout All</button>
+</form>
+
+<form method="post" action="/users/me">
+    <input type="hidden" name="_method" value="delete">
+    <button type="submit"> delete me </button>
 </form>
 </body>
 <!--<script src="/js/login.js"></script>-->
