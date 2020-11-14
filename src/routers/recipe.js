@@ -3,16 +3,25 @@ const router = new express.Router()
 const Recipe = require('../models/recipe')
 const auth = require('../middleware/auth')
 
+
+router.get('/recipes/new',auth,async (req,res)=>{
+    res.render('create_recipe',{requiredtitle:req.flash('required')})
+})
 router.post('/recipes', auth, async (req, res) => {
+    if(req.body.completed==='on'){
+        req.body.completed=true
+    }
     try {
         const recipe = new Recipe({
             ...req.body,
             author: req.user._id
         })
         await recipe.save()
-        res.status(201).send(recipe)
+        res.status(201).redirect('/recipes')
+        // res.status(201).send(recipe)
     } catch (e) {
-        res.status(500).send()
+        req.flash('required','Judul Resep Tidak Boleh Kosong!')
+        res.status(500).redirect('/recipes/new')
     }
 
 })
@@ -26,7 +35,6 @@ router.get('/recipes', auth, async (req, res) => {
             const parts = req.query.sortBy.split(':')
             sort[parts[0]] = parts[1]
         }
-
 
         if (req.query.completed) {
             searchCriteria.completed = req.query.completed === 'true'
@@ -68,7 +76,6 @@ router.get('/recipes', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send(e)
     }
-
 })
 
 router.get('/recipes/:id', auth, async (req, res) => {
@@ -78,13 +85,33 @@ router.get('/recipes/:id', auth, async (req, res) => {
         if (!recipe) {
             res.status(404).send()
         }
-        res.send(recipe)
+        res.render('recipe',{recipe})
+        // res.send(recipe)
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
+router.get('/recipes/:id/edit', auth, async (req, res) => {
+    try {
+        const recipe = await Recipe.findOne({_id: req.params.id, author: req.user._id})
+
+        if (!recipe) {
+            res.status(404).send()
+        }
+        console.log(recipe.completed)
+        res.render('recipe_edit',{recipe,requiredtitle:req.flash('required')})
+        // res.send(recipe)
     } catch (e) {
         res.status(500).send(e)
     }
 })
 
 router.patch('/recipes/:id', auth, async (req, res) => {
+    console.log(req.params)
+    if (req.body.completed==='on'){
+        req.body.completed = true
+    }else req.body.completed = false
     const updates = Object.keys(req.body)
     const allowedUpdates = ['title', 'description', 'completed']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
@@ -102,9 +129,11 @@ router.patch('/recipes/:id', auth, async (req, res) => {
             recipe[update] = req.body[update]
         })
         await recipe.save()
-        res.send(recipe)
+        res.redirect('/recipes')
+        // res.send(recipe)
     } catch (e) {
-        res.status(500).send(e)
+        req.flash('required','Judul Resep Tidak Boleh Kosong!')
+        res.status(500).redirect(`/recipes/${req.params.id}/edit`)
     }
 })
 
@@ -115,7 +144,8 @@ router.delete('/recipes/:id', auth, async (req, res) => {
             res.status(404).send()
         }
         recipe.remove()
-        res.send(recipe)
+        res.redirect('/recipes')
+        // res.send(recipe)
     } catch (e) {
         res.status(500).send(e)
     }

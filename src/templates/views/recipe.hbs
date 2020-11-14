@@ -2,9 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Recipe</title>
+    <title>Masak Masak</title>
 </head>
 <body>
-<h1> RESEP</h1>
+<p> {{recipe.title}}</p>
+<p> {{recipe.description}}</p>
+<p> <input {{#if recipe.completed}}checked {{/if}} name="completed" type="checkbox" disabled>Sudah Dibuat</p>
+<form method="post" action="/recipes/{{recipe._id}}">
+    <p><input type="hidden" name="_method" value="delete"></p>
+    <button type="submit"> Hapus Resep </button>
+</form>
+<button onclick="location.href='/recipes/{{recipe._id}}/edit'"> Edit Resep</button>
+<button onclick="location.href='/recipes/'"> Kembali</button>
+<br>
+<br>
+<a href="/users/me" style="text-decoration: none"> Profil Saya </a>
+<a href="/recipes/new" style="text-decoration: none"> Buat Resep Baru </a>
 </body>
+<!--<script src="/js/login.js"></script>-->
 </html>

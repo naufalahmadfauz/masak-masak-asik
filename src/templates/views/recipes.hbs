@@ -6,17 +6,28 @@
 </head>
 <body>
 <h1> Selamat Datang Di Aplikasi masak masak</h1>
+<form method="get" action="/recipes">
+    Urutkan Berdasar:
+    <select name="sortBy">
+        <option value="createdAt:desc"> Terakhir Dibuat</option>
+        <option value="updatedAt:desc"> Terakhir Diedit</option>
+        <option value="alphabetical:asc"> Alfabet</option>
+    </select>
+    <button type="submit">Urutkan</button>
+</form>
 {{#if recipes}}
     {{#recipes}}
-        <p> {{title}} </p>
+        <p><a style="text-decoration: none" href="/recipes/{{id}}"> {{title}} </a> </p>
+
     {{/recipes}}
-    {{else}}
+{{else}}
     <p>No Recipes!</p>
 {{/if}}
 
 <br>
 <br>
 <a href="/users/me" style="text-decoration: none"> Profil Saya </a>
+<a href="/recipes/new" style="text-decoration: none"> Buat Resep Baru </a>
 </body>
 <!--<script src="/js/login.js"></script>-->
 </html>

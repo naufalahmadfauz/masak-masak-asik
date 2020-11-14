@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Masak Masak</title>
+</head>
+<body>
+<form method="post" action="/recipes/{{recipe._id}}">
+    <input type="hidden" name="_method" value="patch">
+    <p> <input value="{{recipe.title}}" name="title" placeholder="Judul Resep"></p>
+    <p><textarea name="description"  placeholder="Deskripsi Resep" >{{recipe.description}}</textarea></p>
+    <p> <input {{#if recipe.completed}}checked {{/if}} name="completed" type="checkbox">Sudah Dibuat</p>
+    <p> <button type="submit">Edit resep</button></p>
+</form>
+{{requiredtitle}}
+</body>
+</html>

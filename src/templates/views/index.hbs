@@ -6,9 +6,11 @@
 </head>
 <body>
 <h1> Selamat Datang Di Aplikasi masak masak</h1>
+{{updated}}
 <p> Nama : {{user.name}}</p>
 <p> Email : {{user.email}}</p>
 <p> Nomer Handphone : {{user.phoneNumber}}</p>
+<img src="/users/{{user._id}}/avatar">
 
 <a href="/recipes" style="text-decoration: none"> Resep Saya </a>
 <a href="/users/me/edit"> Edit Profil Saya</a>
